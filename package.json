@@ -1,0 +1,11 @@
+{
+	"name": "treasure_vision",
+	"version": "0.1.0",
+	"scripts": {
+		"build": "webpack"
+	},
+	"dependencies": {
+		"webpack": "5.39.1",
+		"webpack-cli": "4.7.2"
+	}
+}
