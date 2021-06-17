@@ -25,7 +25,7 @@ module.exports = {
 		}),
 		new CopyWebpackPlugin({
 			patterns: [
-				{ from: "src/opencv.js" },
+				{ from: "src/opencv.js", },
 			],
 		}),
 	],
