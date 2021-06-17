@@ -2,10 +2,12 @@
 	"name": "treasure_vision",
 	"version": "0.1.0",
 	"scripts": {
-		"build": "webpack"
+		"build": "webpack",
+		"serve": "webpack-cli serve --mode development"
 	},
 	"dependencies": {
 		"webpack": "5.39.1",
-		"webpack-cli": "4.7.2"
+		"webpack-cli": "4.7.2",
+		"webpack-dev-server": "3.11.2"
 	}
 }

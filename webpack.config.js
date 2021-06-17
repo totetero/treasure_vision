@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
 
+const fs = require("fs");
 const path = require("path");
 
 // ----------------------------------------------------------------
@@ -15,6 +16,13 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, "./dist"),
 		filename: "index.js",
+	},
+	devServer: {
+		contentBase: "./dist",
+		https: {
+			key: fs.readFileSync("dist/ssl_fuhaha_treasure_vision.key"),
+			cert: fs.readFileSync("dist/ssl_fuhaha_treasure_vision.crt"),
+		},
 	},
 };
 
