@@ -14,10 +14,19 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
 	mode: "development",
-	entry: path.resolve(__dirname, "./src/main.js"),
+	entry: path.resolve(__dirname, "./src/main.ts"),
 	output: {
 		path: path.resolve(__dirname, "./dist"),
 		filename: "index.js",
+	},
+	resolve: {
+		extensions: [".js", ".ts",],
+	},
+	module: {
+		rules: [{
+			test: /\.ts$/,
+			loader: "ts-loader"
+		},],
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
