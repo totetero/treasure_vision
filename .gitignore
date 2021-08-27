@@ -2,6 +2,8 @@
 # --------------------------------
 
 dist/opencv
+dist/ssl_fuhaha_treasure_vision.crt
+dist/ssl_fuhaha_treasure_vision.key
 
 # --------------------------------
 

@@ -36,8 +36,10 @@ document.addEventListener("DOMContentLoaded", async event => {
 	canvasDraw.height = 256;
 	const context = canvasDraw.getContext("2d");
 	// 表示キャンバス作成
-	const canvasView = document.createElement("canvas");
-	divRoot.appendChild(canvasView);
+	const canvasView1 = document.createElement("canvas");
+	const canvasView2 = document.createElement("canvas");
+	divRoot.appendChild(canvasView1);
+	divRoot.appendChild(canvasView2);
 
 	// opencvの読込待機
 	await new Promise(resolve => { cv.then(() => resolve()); });
@@ -54,17 +56,38 @@ document.addEventListener("DOMContentLoaded", async event => {
 		const srcy = Math.floor((video.videoHeight - srch) / 2);
 		context.drawImage(video, srcx, srcy, srcw, srch, 0, 0, canvasDraw.width, canvasDraw.height);
 
-		const src = cv.imread(canvasDraw);
-		const matGray = new cv.Mat();
+		const matSrc = cv.imread(canvasDraw);
+		const matHsv = new cv.Mat();
+		const matLowerb = new cv.Mat(canvasDraw.height, canvasDraw.width, cv.CV_8UC3, new cv.Scalar(62, 100, 0));
+		const matUpperb = new cv.Mat(canvasDraw.height, canvasDraw.width, cv.CV_8UC3, new cv.Scalar(79, 255, 255));
+		const matAaa = new cv.Mat();
+		const matBbb = new cv.Mat();
+		const matHierarchy = new cv.Mat();
+		const vecContours = new cv.MatVector();
 
-		// 白黒変換
-		cv.cvtColor(src, matGray, cv.COLOR_RGBA2GRAY, 0);
+		// 何かの変換
+		cv.cvtColor(matSrc, matHsv, cv.COLOR_BGR2HSV, 0);
+		cv.inRange(matHsv, matLowerb, matUpperb, matAaa);
+		cv.findContours(matAaa, vecContours, matHierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+		for (let i = 0; i < vecContours.size(); i++) {
+			const matContour = vecContours.get(i);
+			const area = cv.contourArea(matContour, false);
+			if (area < 10) { continue; }
+			cv.drawContours(matSrc, vecContours, i, [255, 0, 0, 255], 4);
+		}
 
 		// 描画
-		cv.imshow(canvasView, matGray);
+		cv.imshow(canvasView1, matSrc);
+		cv.imshow(canvasView2, matAaa);
 
-		src.delete();
-		matGray.delete();
+		matSrc.delete();
+		matHsv.delete();
+		matLowerb.delete();
+		matUpperb.delete();
+		matAaa.delete();
+		matBbb.delete();
+		matHierarchy.delete();
+		vecContours.delete();
 
 		window.requestAnimationFrame(mainloop);
 	};
@@ -72,7 +95,6 @@ document.addEventListener("DOMContentLoaded", async event => {
 	// メインループ開始
 	window.requestAnimationFrame(mainloop);
 });
-
 
 // ----------------------------------------------------------------
 // ----------------------------------------------------------------
