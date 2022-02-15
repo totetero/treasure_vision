@@ -39,7 +39,11 @@ class MaskedCamera {
 
 	async initImage() {
 		// アセット情報を取得
-		const hashMatch = document.location.hash.match(/^#\/(0x[0-9a-fA-F]*)\/([0-9]*)$/);
+		const hashMatch = document.location.hash.match(/^#\/(0x[0-9a-fA-F]*)\/([0-9]*)$/) || [
+			null,
+			"0x495f947276749ce646f68ac8c248420045cb7b5e",
+			"57920695457072532059112617018159441295166854042840448471990453141540641439745",
+		];
 		if (hashMatch !== null) {
 			// アドレスのハッシュ値から取得
 			const contractAddress = hashMatch[1];
@@ -51,15 +55,16 @@ class MaskedCamera {
 			this.asset.contractAddress = responseJson.asset_contract.address;
 			this.asset.tokenId = responseJson.token_id;
 		} else {
-			// 1000番くらいまでのカワイイ骨からランダムで取得
-			const offset = Math.floor(Math.random() * 1000);
-			const collection = "kawaiiskull";
-			const response = await fetch(`https://api.opensea.io/api/v1/assets?order_direction=asc&limit=1&offset=${offset}&collection=${collection}`);
-			const responseJson = await response.json();
-			this.asset.url = responseJson.assets[0].image_url;
-			this.asset.name = responseJson.assets[0].name;
-			this.asset.contractAddress = responseJson.assets[0].asset_contract.address;
-			this.asset.tokenId = responseJson.assets[0].token_id;
+			// 2022/02/16追記 いつの間にかCORSで取れなくなっていた
+			// // 1000番くらいまでのカワイイ骨からランダムで取得
+			// const offset = Math.floor(Math.random() * 1000);
+			// const collection = "kawaiiskull";
+			// const response = await fetch(`https://api.opensea.io/api/v1/assets?order_direction=asc&limit=1&offset=${offset}&collection=${collection}`);
+			// const responseJson = await response.json();
+			// this.asset.url = responseJson.assets[0].image_url;
+			// this.asset.name = responseJson.assets[0].name;
+			// this.asset.contractAddress = responseJson.assets[0].asset_contract.address;
+			// this.asset.tokenId = responseJson.assets[0].token_id;
 		}
 
 		// アセット情報から画像を作成
@@ -389,8 +394,8 @@ const ComponentMaskText = props => {
 			padding: "10px",
 			backgroundColor: "white",
 		}, propStyle)}>
-			<div style={{ fontSize: "100%", }}>Randomly pick up from Kawaii Skull.</div>
-			<div style={{ fontSize: "60%", }}>1000番くらいまでの Kawaii Skull からランダムで取得します。</div>
+			<div style={{ fontSize: "100%", }}><s>Randomly pick up from Kawaii Skull.</s></div>
+			<div style={{ fontSize: "60%", }}><s>1000番くらいまでの Kawaii Skull からランダムで取得します。</s></div>
 		</div>
 	);
 };
